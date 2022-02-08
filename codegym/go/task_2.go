@@ -34,6 +34,20 @@ func (c Circle) printCircleCircumference() {
 	fmt.Println(2.0 * c.radius * c.pi)
 }
 
+// get age function
+func (p Person) GetAge() int {
+	return p.age
+}
+
+// custom string function like java toString()
+func (m Man) String() string {
+	return fmt.Sprintf("%+v wife:{%+v}", m.Person, m.wife.Person)
+}
+
+func (w Woman) String() string {
+	return fmt.Sprintf("%+v husband:{%+v}", w.Person, w.husband.Person)
+}
+
 func convertCelsiusToFahrenheit(c Celsius) Fahrenheit {
 	return Fahrenheit(c*9/5 + 32)
 }
@@ -51,7 +65,7 @@ func main() {
 	p := new(Person)
 	p.age = 2
 	p.name = "d"
-	fmt.Println(*p)
+	fmt.Printf("%+v\n", p)
 
 	woman := Woman{Person: Person{name: "Alice"}}
 	man := Man{Person: Person{name: "John"}}
@@ -60,8 +74,8 @@ func main() {
 	woman.husband = &man
 	man.wife = &woman
 
-	fmt.Println(woman)
-	fmt.Println(woman.husband.name)
-	fmt.Println(man)
-	fmt.Println(man.wife.name)
+	fmt.Printf("%+v\n", woman)
+	// fmt.Println(woman.husband.name)
+	fmt.Printf("%+v\n", man)
+	// fmt.Println(man.wife.name)
 }
