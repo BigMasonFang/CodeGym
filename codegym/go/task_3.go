@@ -4,38 +4,25 @@ import (
 	"fmt"
 )
 
-func permutation(src []int) {
-	for i := 0; i < len(src); i++ {
-		first := src[i]
-		temp := make([]int, 0)
-		temp = append(temp, src[:i]...)
-		temp = append(temp, src[i+1:]...)
-		order([]int{first}, temp)
+// multiplication table
+func printMultiplicationTable(num int) {
+	line := make([]int, num)
+	for i := 0; i < num; i++ {
+		line[i] = i + 1
+	}
+	for _, n := range line {
+		for i := 0; i < num; i++ {
+			fmt.Print(n*(i+1), " ")
+		}
+		fmt.Println()
 	}
 }
 
-func order(s []int, src []int) {
-	fmt.Println("in the recur ", s, src)
-	if len(src) <= 1 {
-		fmt.Println("result: ", s, src, "\n")
-		return
-	}
-	first := src[0]
-	for i := 0; i < len(src); i++ {
-		// swap
-		fmt.Println(i)
-		first, src[i] = src[i], first
-		temp := make([]int, 0)
-		temp = append(temp, src[1:]...)
-		s_demo := make([]int, len(s))
-		s_demo = s
-		dd := make([]int, 0)
-		dd = append(s_demo, first)
-		fmt.Println("befor enter next recur ", dd, temp)
-		order(dd, temp)
-	}
+// keyborad io
+func io() {
+
 }
 
 func main() {
-	permutation([]int{1, 2, 3, 4, 5})
+	printMultiplicationTable(10)
 }
