@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"reflect"
+	"sort"
 )
 
 // O(N^3)
-func threeSum(nums []int) []interface{} {
-	ret := make([]interface{}, len(nums))
+func threeSum1(nums []int) [][]int {
+	ret := make([][]int, len(nums))
 	if len(nums) < 3 {
 		return ret
 	}
+	ret_num := 0
 
 	// filter_nums := removeDuplicateElement(nums)
 
@@ -20,47 +21,83 @@ func threeSum(nums []int) []interface{} {
 				if nums[i]+nums[j]+nums[k] == 0 {
 					// fmt.Println([]int{nums[i], nums[j], nums[k]})
 					ret = append(ret, []int{nums[i], nums[j], nums[k]})
+					ret_num++
 				}
 			}
 		}
 	}
-	return removeDuplicateElement(ret)
+	return removeDuplicateElement(ret[(len(ret) - ret_num):])
 }
 
-func removeDuplicateElement(nums []interface{}) []interface{} {
-	hashTable := make(map[interface{}]int)
-	retTable := make(map[int]interface{})
-	length := 0
+// O(N^2)
+func removeDuplicateElement(nums [][]int) [][]int {
+	for i := len(nums) - 1; i >= 0; i-- {
+		j := i - 1
+		for j >= 0 {
+			if compareElement(nums[i], nums[j]) {
+				nums = append(nums[:j], nums[j+1:]...)
+			}
+			j--
+		}
+	}
+	return nums
+}
 
-	for i, v := range nums {
-		if _, ok := hashTable[v]; ok {
-			fmt.Println(v, " exists")
+func compareElement(e1, e2 []int) bool {
+	// order does not matter
+	hashTable := map[int]int{}
+	for i, v := range e1 {
+		hashTable[v] = i
+	}
+	for _, v := range e2 {
+		if _, ok := hashTable[v]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
+// O(N^2) O(log(N))
+func threeSum(nums []int) [][]int {
+	n := len(nums)
+	sort.Ints(nums)
+	ans := make([][]int, 0)
+
+	// 枚举 a
+	for first := 0; first < n; first++ {
+		// 需要和上一次枚举的数不相同
+		if first > 0 && nums[first] == nums[first-1] {
 			continue
 		}
-		hashTable[v] = i
-		retTable[length] = v
-		length++
+		// c 对应的指针初始指向数组的最右端
+		third := n - 1
+		target := -1 * nums[first]
+		// 枚举 b
+		for second := first + 1; second < n; second++ {
+			// 需要和上一次枚举的数不相同
+			if second > first+1 && nums[second] == nums[second-1] {
+				continue
+			}
+			// 需要保证 b 的指针在 c 的指针的左侧
+			for second < third && nums[second]+nums[third] > target {
+				third--
+			}
+			// 如果指针重合，随着 b 后续的增加
+			// 就不会有满足 a+b+c=0 并且 b<c 的 c 了，可以退出循环
+			if second == third {
+				break
+			}
+			if nums[second]+nums[third] == target {
+				ans = append(ans, []int{nums[first], nums[second], nums[third]})
+			}
+		}
 	}
-
-	ret := make([]interface{}, length)
-	for i, v := range retTable {
-		ret[i] = v
-	}
-	return ret
+	return ans
 }
 
 func main() {
-	test1 := []int{-1, 0, 1, 2, -1, -4}
-	ret := make([]interface{}, 3)
+	test2 := []int{-1, 0, 1, 2, -1, -4, 5, 9, 12, 1, 0, 68, 20}
+	ret1 := threeSum(test2)
+	fmt.Println(ret1)
 
-	fmt.Println(reflect.TypeOf(test1))
-	fmt.Println(reflect.TypeOf(ret))
-
-	// fmt.Println(removeDuplicateElement(test1))
-	// ret := threeSum(test1)
-	// fmt.Println(ret)
-
-	// for _, v := range ret {
-	// 	fmt.Println(v)
-	// }
 }
