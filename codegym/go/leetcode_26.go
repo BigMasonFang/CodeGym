@@ -5,41 +5,39 @@ import (
 )
 
 func removeDuplicates(nums []int) int {
-	// O(N^2)
-	// length := 0
-	// for i := len(nums) - 1; i > 0; i-- {
-	// 	for j := i - 1; j >= 0; j-- {
-	// 		if nums[i] == nums[j] {
-	// 			nums = append(nums[:j], nums[i:]...)
-	// 			length++
-	// 		}
-	// 	}
-	// }
-	// return length
+	l := len(nums)
+	if l <= 1 {
+		return l
+	}
 
-	left, right := 0, 1
-
-	for right < len(nums)-1 {
-		if nums[left] == nums[right] {
-			// compare and reassgin
-			nums[right] = nums[right+1]
-			right++
-		} else {
-			left++
-			nums[left] = nums[right]
+	// slow,fast
+	s, f := 0, 1
+	for f < l {
+		if nums[s] != nums[f] {
+			s++
+			nums[s] = nums[f] // assignment
 		}
+		f++
 	}
-	// fmt.Println(left, right)
-	if nums[left] != nums[right] {
-		left++
-		nums[left] = nums[right]
-	}
+	return s + 1
 
-	return left
+	// n := len(nums)
+	// if n == 0 {
+	//     return 0
+	// }
+	// slow := 1
+	// for fast := 1; fast < n; fast++ {
+	//     if nums[fast] != nums[fast-1] {
+	//         nums[slow] = nums[fast]
+	//         slow++
+	//     }
+	// }
+	// return slow
 }
 
 func main() {
-	test := []int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4, 4, 5}
-	fmt.Println(removeDuplicates(test))
-	fmt.Println(test)
+	// test := []int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}
+	test2 := []int{1, 2, 3, 4, 5}
+	fmt.Println(removeDuplicates(test2))
+	fmt.Println(test2)
 }
