@@ -30,6 +30,20 @@ func removeElement2(nums []int, val int) int {
 	return left
 }
 
+// improved O(N)
+func removeElement3(nums []int, val int) int {
+	left, right := 0, len(nums)
+	for left < right {
+		if nums[left] == val {
+			nums[left] = nums[right-1]
+			right--
+		} else {
+			left++
+		}
+	}
+	return left
+}
+
 func main() {
 	test1 := []int{0, 1, 2, 2, 3, 0, 4, 2}
 	// ret := removeElement(test1, 2)
