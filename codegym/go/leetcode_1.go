@@ -18,12 +18,13 @@ func twoSum(nums []int, target int) []int {
 
 // O(N)
 func twoSum2(nums []int, target int) []int {
+	// 20220220 revisit
 	hashTable := map[int]int{}
-	for i, x := range nums {
-		if p, ok := hashTable[x]; ok {
-			return []int{p, i}
+	for i, v := range nums {
+		if vHash, ok := hashTable[target-v]; ok {
+			return []int{i, vHash}
 		}
-		hashTable[x] = i
+		hashTable[v] = i
 	}
 	return nil
 }

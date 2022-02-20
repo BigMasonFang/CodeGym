@@ -1,7 +1,9 @@
+// three sum
 package main
 
 import (
 	"fmt"
+	"math"
 	"sort"
 )
 
@@ -57,47 +59,71 @@ func compareElement(e1, e2 []int) bool {
 	return true
 }
 
-// O(N^2) O(log(N))
+// O(N^2)+O(log(N))
+// 20220220 revisit
+// 这道题主要在于 1排序之后使用双指针 2 重复元素的处理
 func threeSum(nums []int) [][]int {
 	n := len(nums)
+	if n <= 2 {
+		return [][]int{}
+	} else if n == 3 {
+		if nums[0]+nums[1]+nums[2] == 0 {
+			return [][]int{[]int{nums[0], nums[1], nums[2]}}
+		}
+	}
 	sort.Ints(nums)
-	ans := make([][]int, 0)
+	ret := make([][]int, 0)
 
-	// 枚举 a
-	for first := 0; first < n; first++ {
-		// 需要和上一次枚举的数不相同
-		if first > 0 && nums[first] == nums[first-1] {
+	for i := 0; i < n-2; i++ {
+		// nums handle repeat value in the past
+		// this repeat is "element counted"
+		// and
+		// nums[i] > 0 and sorted, then must >0
+		if i > 0 && nums[i] == nums[i-1] {
 			continue
 		}
-		// c 对应的指针初始指向数组的最右端
-		third := n - 1
-		target := -1 * nums[first]
-		// 枚举 b
-		for second := first + 1; second < n; second++ {
-			// 需要和上一次枚举的数不相同
-			if second > first+1 && nums[second] == nums[second-1] {
-				continue
-			}
-			// 需要保证 b 的指针在 c 的指针的左侧
-			for second < third && nums[second]+nums[third] > target {
-				third--
-			}
-			// 如果指针重合，随着 b 后续的增加
-			// 就不会有满足 a+b+c=0 并且 b<c 的 c 了，可以退出循环
-			if second == third {
-				break
-			}
-			if nums[second]+nums[third] == target {
-				ans = append(ans, []int{nums[first], nums[second], nums[third]})
+		if nums[i] > 0 {
+			break
+		}
+
+		left, right := i+1, n-1
+
+		for left < right {
+			// three conditions
+			if nums[i]+nums[left]+nums[right] == 0 {
+				ret = append(ret, []int{nums[i], nums[left], nums[right]})
+				// deal with repeat elements left side
+				for left < right && nums[left] == nums[left+1] {
+					left++
+					// out of boundary
+					if left == n-2 {
+						break
+					}
+				}
+				// deal with repeat elments right side
+				for left < right && nums[right] == nums[right-1] {
+					right--
+					if right == n-2 {
+						break
+					}
+				}
+				left++
+				right--
+			} else if nums[i]+nums[left]+nums[right] > 0 {
+				right--
+			} else {
+				left++
 			}
 		}
 	}
-	return ans
+	return ret
 }
 
 func main() {
-	test2 := []int{-1, 0, 1, 2, -1, -4, 5, 9, 12, 1, 0, 68, 20}
-	ret1 := threeSum(test2)
-	fmt.Println(ret1)
+	// test2 := []int{-1, 0, 1, 2, -1, -4, 5, 9, 12, 1, 0, 68, 20}
+	// ret1 := threeSum(test2)
+
+	fmt.Println(math.Abs(-33))
+	// fmt.Println(ret1)
 
 }
