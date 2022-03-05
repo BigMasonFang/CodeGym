@@ -21,7 +21,7 @@ func hasCycle1(head *ListNode) bool {
 
 // Floyd Cycle Detection Algorithm
 // O(N) O(1)
-func hasCycle(head *ListNode) bool {
+func hasCycle2(head *ListNode) bool {
 	if head == nil || head.Next == nil {
 		return false
 	}
@@ -32,6 +32,36 @@ func hasCycle(head *ListNode) bool {
 		}
 		p1 = p1.Next
 		p2 = p2.Next.Next
+	}
+	return true
+}
+
+// 20200305 redo
+// naive way
+func hasCycle_naive(head *ListNode) bool {
+	hashMap := make(map[*ListNode]int)
+	for head != nil {
+		if _, ok := hashMap[head.Next]; ok {
+			return true
+		} else {
+			hashMap[head.Next] = 1
+			head = head.Next
+		}
+	}
+	return false
+}
+
+func hasCycle(head *ListNode) bool {
+	if head == nil || head.Next == nil {
+		return false
+	}
+	slow, fast := head, head.Next
+	for fast != slow {
+		if fast == nil || fast.Next == nil {
+			return false
+		}
+		slow = slow.Next
+		fast = fast.Next.Next
 	}
 	return true
 }
