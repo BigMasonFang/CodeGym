@@ -7,7 +7,8 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func deleteDuplicates(head *ListNode) *ListNode {
+// old
+func deleteDuplicates1(head *ListNode) *ListNode {
 	p := head
 	if p == nil {
 		return head
@@ -17,6 +18,24 @@ func deleteDuplicates(head *ListNode) *ListNode {
 			p.Next = p.Next.Next
 		} else {
 			p = p.Next
+		}
+	}
+	return head
+}
+
+// 20220309 redo
+func deleteDuplicates(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	slow, fast := head, head.Next
+	// result := slow
+	for fast != nil {
+		if slow.Val == fast.Val {
+			fast = fast.Next
+			slow.Next = fast
+		} else {
+			slow, fast = slow.Next, fast.Next
 		}
 	}
 	return head
